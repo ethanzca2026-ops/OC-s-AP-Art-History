@@ -1,29 +1,56 @@
 import type { Artwork } from '@/data/artworks';
-import { getArtworkSubThemes } from '@/utils/subThemes';
+import { getArtworkSubThemes, themeGroups } from '@/utils/subThemes';
 
-const cache = new Map<string, string[]>();
+const artworkTagCache = new Map<string, string[]>();
+let countCache: Map<string, number> | null = null;
+let availableThemeGroupsCache: typeof themeGroups | null = null;
 
 export function getCachedArtworkSubThemes(artwork: Artwork) {
-  const key = artwork.id;
-  const cached = cache.get(key);
+  const existing = artworkTagCache.get(artwork.id);
 
-  if (cached) {
-    return cached;
+  if (existing) {
+    return existing;
   }
 
   const tags = getArtworkSubThemes(artwork);
-  cache.set(key, tags);
+  artworkTagCache.set(artwork.id, tags);
   return tags;
 }
 
-export function getCachedSubThemeCount(artworks: Artwork[], subTheme: string) {
-  let count = 0;
+export function getAllCachedSubThemeCounts(artworks: Artwork[]) {
+  if (countCache) {
+    return countCache;
+  }
+
+  const counts = new Map<string, number>();
 
   for (const artwork of artworks) {
-    if (getCachedArtworkSubThemes(artwork).includes(subTheme)) {
-      count += 1;
+    for (const tag of getCachedArtworkSubThemes(artwork)) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
     }
   }
 
-  return count;
+  countCache = counts;
+  return counts;
+}
+
+export function getCachedSubThemeCount(artworks: Artwork[], subTheme: string) {
+  return getAllCachedSubThemeCounts(artworks).get(subTheme) ?? 0;
+}
+
+export function getCachedAvailableThemeGroups(artworks: Artwork[]) {
+  if (availableThemeGroupsCache) {
+    return availableThemeGroupsCache;
+  }
+
+  const counts = getAllCachedSubThemeCounts(artworks);
+
+  availableThemeGroupsCache = themeGroups
+    .map((group) => ({
+      ...group,
+      subThemes: group.subThemes.filter((subTheme) => (counts.get(subTheme) ?? 0) > 0),
+    }))
+    .filter((group) => group.subThemes.length > 0);
+
+  return availableThemeGroupsCache;
 }

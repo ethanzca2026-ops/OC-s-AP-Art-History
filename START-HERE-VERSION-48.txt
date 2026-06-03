@@ -1,0 +1,15 @@
+VERSION 48 CLEAN FIX
+
+This version fixes Search and Themes pages.
+
+Copy all files from this folder into your GitHub-connected version 43 folder.
+Keep the hidden .git folder.
+
+Then run:
+npm install
+npx expo start --clear
+
+If it works:
+git add .
+git commit -m "Fix search and themes loading"
+git push

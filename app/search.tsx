@@ -5,8 +5,12 @@ import { ArtworkCard } from '@/components/ArtworkCard';
 import { FilterChip } from '@/components/FilterChip';
 import { artworks, units } from '@/data/artworks';
 import { searchArtworks } from '@/utils/search';
-import { getCachedArtworkSubThemes } from '@/utils/subThemeCache';
-import { getAvailableThemeGroupsWithinMainThemes, getSubThemeCount, getThemeDescription, getSubThemesForGroup } from '@/utils/subThemes';
+import { getThemeDescription, getSubThemesForGroup } from '@/utils/subThemes';
+import {
+  getCachedArtworkSubThemes,
+  getCachedAvailableThemeGroups,
+  getCachedSubThemeCount,
+} from '@/utils/subThemeCache';
 
 function artworkMatchesThemeGroup(artwork: any, theme: string) {
   if (theme === 'All') return true;
@@ -29,7 +33,7 @@ export default function SearchScreen() {
   const [popupTheme, setPopupTheme] = useState('Culture and context');
   const [visibleCount, setVisibleCount] = useState(30);
 
-  const availableThemeGroups = useMemo(() => getAvailableThemeGroupsWithinMainThemes(artworks), []);
+  const availableThemeGroups = useMemo(() => getCachedAvailableThemeGroups(artworks), []);
   const popupGroup = availableThemeGroups.find((group) => group.theme === popupTheme) ?? availableThemeGroups[0];
 
   const results = useMemo(() => {
@@ -84,7 +88,9 @@ export default function SearchScreen() {
       <View style={styles.hero}>
         <Text style={styles.kicker}>Artwork search</Text>
         <Text style={styles.heading}>Explore the AP Art History collection.</Text>
-        <Text style={styles.subtitle}>Search by title, AP number, artist, culture, medium, period, theme, sub-theme, location, comparison type, or idea.</Text>
+        <Text style={styles.subtitle}>
+          Search by title, AP number, artist, culture, medium, period, theme, sub-theme, location, comparison type, or idea.
+        </Text>
 
         <View style={styles.searchBar}>
           <Text style={styles.searchIcon}>⌕</Text>
@@ -187,7 +193,7 @@ export default function SearchScreen() {
 
                 <View style={styles.subThemeGrid}>
                   {popupGroup.subThemes.map((subTheme) => {
-                    const count = getSubThemeCount(artworks, subTheme);
+                    const count = getCachedSubThemeCount(artworks, subTheme);
                     return (
                       <Pressable
                         key={subTheme}

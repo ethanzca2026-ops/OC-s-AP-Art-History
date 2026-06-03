@@ -2,15 +2,11 @@ import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NavBar } from '@/components/NavBar';
 import { artworks } from '@/data/artworks';
-import {
-  getAvailableThemeGroupsWithinMainThemes,
-  
-  getThemeDescription,
-} from '@/utils/subThemes';
-import { getCachedSubThemeCount } from '@/utils/subThemeCache';
+import { getThemeDescription } from '@/utils/subThemes';
+import { getCachedAvailableThemeGroups, getCachedSubThemeCount } from '@/utils/subThemeCache';
 
 export default function ThemesScreen() {
-  const availableThemeGroups = getAvailableThemeGroupsWithinMainThemes(artworks);
+  const availableThemeGroups = getCachedAvailableThemeGroups(artworks);
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
@@ -19,7 +15,9 @@ export default function ThemesScreen() {
       <View style={styles.hero}>
         <Text style={styles.kicker}>Thematic links</Text>
         <Text style={styles.title}>Explore thematic connections.</Text>
-        <Text style={styles.subtitle}>Explore artworks through visual analysis, context, materials, purpose, comparison, and AP Art History concepts.</Text>
+        <Text style={styles.subtitle}>
+          Explore artworks through visual analysis, context, materials, purpose, comparison, and AP Art History concepts.
+        </Text>
       </View>
 
       <View style={styles.grid}>

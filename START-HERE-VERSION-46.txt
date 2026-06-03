@@ -1,0 +1,17 @@
+VERSION 46 CLEAN UPDATE
+
+Use this version by copying ALL files from this folder into your existing GitHub-connected version 43 folder.
+
+Important:
+- Keep the hidden .git folder in your version 43 folder.
+- Replace the visible files/folders with these version 46 files.
+- Then run:
+  npm install
+  npx expo start --clear
+
+If it works locally:
+  git add .
+  git commit -m "Clean performance fix version 46"
+  git push
+
+Vercel will redeploy automatically.
