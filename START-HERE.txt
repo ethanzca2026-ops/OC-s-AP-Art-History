@@ -1,0 +1,14 @@
+Open this folder in VS Code or PowerShell.
+
+You should see package.json in this exact folder.
+
+Then run:
+
+npm install
+npm run web
+
+If npm says it cannot find package.json, run:
+
+dir
+
+If package.json is not listed, you are in the wrong folder.
